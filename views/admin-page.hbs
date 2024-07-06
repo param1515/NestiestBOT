@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+  <head>
+     <meta charset="utf-8" />
+    <title>Admin Page</title>
+    <!-- Include game-like styles -->
+    <style>
+      /* Game-like styling */
+      body {
+        font-family: 'Press Start 2P', cursive;
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+      }
+
+      .subscriber-list {
+        margin-bottom: 20px;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        animation: fadeIn 1s ease;
+      }
+
+      li {
+        font-size: 1.2em;
+        margin-bottom: 8px;
+      }
+
+      input[type="text"] {
+        padding: 8px;
+        margin-bottom: 10px;
+        font-size: 1em;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 1.2em;
+        background-color: #4285f4;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #2e5dc8;
+      }
+
+      a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1.1em;
+        margin-top: 20px;
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Welcome to the Admin Page!</h1>
+    <p></p>
+    <p></p>
+    
+    <!-- Display subscribers -->
+    <div class="subscriber-list">
+      <h2>Subscribers</h2>
+      <ul id="subscribers">
+        <!-- Iterate over subscribers using NestJS templating -->
+        {{#each subscribers}}
+          <li>User ID: {{this.userId}}, First Name: {{this.firstname}}</li>
+        {{/each}}
+      </ul>
+    </div>
+
+    <!-- Add subscriber form -->
+    <div>
+      <h2>Add Subscriber</h2>
+      <input type="text" id="userIdInput" placeholder="Enter User ID" />
+      <input type="text" id="firstNameInput" placeholder="Enter First Name" />
+      <button onclick="addSubscriber()">Subscribe</button>
+    </div>
+
+    <!-- Remove subscriber form -->
+    <div>
+      <h2>Remove Subscriber</h2>
+      <input type="text" id="removeUserIdInput" placeholder="Enter User ID to unsubscribe" />
+      <button onclick="removeSubscriber()">Unsubscribe</button>
+    </div>
+
+    <a href="#" onclick="signOut()">Sign Out</a> <!-- A sign-out link -->
+
+    <!-- Include Google Fonts for 'Press Start 2P' font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap">
+
+    <script>
+      // JavaScript functions for adding, removing subscribers, and sign-out
+
+      // Function to add a new subscriber
+      async function addSubscriber() {
+        const userIdInput = document.getElementById('userIdInput');
+        const firstNameInput = document.getElementById('firstNameInput');
+
+        const userId = userIdInput.value.trim();
+        const firstName = firstNameInput.value.trim();
+
+        if (!userId || !firstName) {
+          alert('Please enter both User ID and First Name.');
+          return;
+        }
+
+        try {
+          // Perform API call or file write to add new subscriber
+          // For demonstration purposes, add the subscriber to the displayed list
+          const newSubscriber = { userId: Number(userId), firstname: firstName };
+          const subscribersList = document.getElementById('subscribers');
+          const listItem = document.createElement('li');
+          listItem.textContent = `User ID: ${newSubscriber.userId}, First Name: ${newSubscriber.firstname}`;
+          subscribersList.appendChild(listItem);
+
+          userIdInput.value = ''; // Clear input fields
+          firstNameInput.value = '';
+
+        } catch (error) {
+          console.error('Error adding subscriber:', error);
+          alert('Failed to add subscriber.');
+        }
+      }
+
+      // Function to remove a subscriber
+      async function removeSubscriber() {
+        const removeUserIdInput = document.getElementById('removeUserIdInput');
+        const userIdToRemove = removeUserIdInput.value.trim();
+
+        if (!userIdToRemove) {
+          alert('Please enter User ID to unsubscribe.');
+          return;
+        }
+
+        try {
+          // Perform API call or file write to remove subscriber
+          // For demonstration purposes, remove the subscriber from the displayed list
+          const subscribersList = document.getElementById('subscribers');
+          const items = subscribersList.getElementsByTagName('li');
+
+          for (let i = 0; i < items.length; i++) {
+            const userId = items[i].textContent.match(/User ID: (\d+)/)[1];
+            if (userId === userIdToRemove) {
+              subscribersList.removeChild(items[i]);
+              break;
+            }
+          }
+
+          removeUserIdInput.value = ''; // Clear input field
+
+        } catch (error) {
+          console.error('Error removing subscriber:', error);
+          alert('Failed to remove subscriber.');
+        }
+      }
+
+      // Function to sign out the user
+      function signOut() {
+        // Your sign-out logic here
+        
+        // For demonstration purposes, redirecting to the sign-in page
+        window.location.href = '/'; // Replace with your sign-in page URL
+      }
+    </script>
+  </body>
+</html>

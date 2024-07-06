@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Sign In</title>
+    
+     <style>
+      /* CSS styles */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4285f4;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #2e5dc8;
+      }
+    </style><!-- Include Firebase SDK -->
+    <script type="module">
+    
+
+      // Your web app's Fire
+ 
+       async function initFirebase() {
+        const firebaseConfig = {        
+    apiKey: "AIzaSyCGuk20qlb1kGTfzjc-2zV8MZB_9bAoOdo",
+    authDomain: "abhi-b44c1.firebaseapp.com",
+    projectId: "abhi-b44c1",
+    storageBucket: "abhi-b44c1.appspot.com",
+    messagingSenderId: "53844370696",
+    appId: "1:53844370696:web:392a2500d8b44c9f08b8bd",
+    measurementId: "G-LXP7856BE5"
+        };
+
+        const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
+        const { getAnalytics } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js");
+        const { getAuth, GoogleAuthProvider, signInWithPopup } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth();
+
+        function signIn() {
+          const provider = new GoogleAuthProvider();
+          signInWithPopup(auth, provider)
+            .then((result) => {
+              const user = result.user;
+              console.log("User signed in:", user);
+
+              // Check if credential exists before accessing accessToken
+              const credential = result.credential;
+              const accessToken = credential ? credential.accessToken : null;
+              console.log("Access token:", accessToken);
+
+              window.location.href = '/admin';
+            })
+            .catch((error) => {
+              console.error("Sign-in error:", error);
+              // Handle error if needed
+            });
+        }
+
+        document.getElementById('signInButton').onclick = function() {
+          signIn();
+        };
+      }
+
+      document.addEventListener('DOMContentLoaded', initFirebase);
+        // Call function to enable sign-in (you may want to trigger this via an event or button click)
+    </script>
+  </head>
+  <body>
+    <button id="signInButton">Sign In with Google</button>
+  </body>
+</html>
